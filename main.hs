@@ -6,19 +6,7 @@
 import System.IO
 import Text.Read 
 
--- Define our datatypes iteratively, small to big
-
--- The amount of damage a particular move inflicts
-type Power = Int
-
--- Constructor for a Move, it has a name and an amount of damage
-data Move = Move String Power
-
--- A Pokemon has a name, health remaining, and up to 4 moves
-data Pokemon = Pokemon4 String Int Move Move Move Move
-             | Pokemon3 String Int Move Move Move
-             | Pokemon2 String Int Move Move
-             | Pokemon1 String Int Move
+import Pokemon
 
 -- A healing item has a name and the amount of health it restores
 data Heal = Heal String Int
@@ -30,20 +18,29 @@ type HealthAction = Heal
 -- State of the battle
 type BattleState = (Pokemon, Pokemon)
 
+-- Define Healing item constants
+potion = Heal "Potion" 20
+superPotion = Heal "Super Potion" 50
+
 -- Main function to start game
-play :: IO String -- TODO: update type
+play :: IO () -- TODO: update type
 play = 
     do
+        putStrLn "--------------------------------------"
         putStrLn "Welcome to the Pokemon Battle Arena"
-        putStrLn "Choose a starter Pokemon, including quotation marks: \"Bulbasaur\", \"Squirtle\", \"Charmander\" (leave empty to exit)"
+        putStrLn "Choose a Pokemon to use, wrapped in quotation marks, including quotation marks:"
+        putStrLn "(leave empty to exit, or \"list\" for available Pokemon)"
         choice <- getLine 
         case (readMaybe choice :: Maybe String) of
-            Nothing -> return "Goodbye"
+            Nothing -> 
+                do
+                    putStrLn "Goodbye"
+            -- TODO: list Pokemon names when "list"
             Just choice ->
-                if choice `elem` ["Bulbasaur", "Squirtle", "Charmander"]
+                if choice `elem` allPokemonNames
                     then
                         do
-                            return ("You chose " ++ choice)
+                            putStrLn ("You chose " ++ choice)
                     else
                         do
                             putStrLn "Try again"
