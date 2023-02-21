@@ -7,20 +7,10 @@ import System.IO
 import Text.Read 
 
 import Pokemon
-
--- A healing item has a name and the amount of health it restores
-data Heal = Heal String Int
-
--- On each turn, either we perform a move or use a healing item
-type BattleAction = Move
-type HealthAction = Heal
+import Heal
 
 -- State of the battle
 type BattleState = (Pokemon, Pokemon)
-
--- Define Healing item constants
-potion = Heal "Potion" 20
-superPotion = Heal "Super Potion" 50
 
 -- Main function to start game
 play :: IO ()
@@ -105,7 +95,6 @@ personBattle bs =
                                             else
                                                 do
                                                     putStrLn (getName (fst bs) ++ " used " ++ getMoveName move ++ "!")
-                                                    -- TODO: update battlestate
                                                     computerBattle (fst bs, useMoveOn move (snd bs))
                             -- else if action == "Item"
                             --     then

@@ -8,29 +8,14 @@ module Pokemon
     getName,
     getHealth,
     getMoveName,
-    getMoveDamage,
     nullMove,
     getMoveByName,
     getMoves,
     useMoveOn,
 ) where
 
--- The amount of damage a particular move inflicts
-type Power = Int
-
--- Constructor for a Move, it has a name and an amount of damage
-data Move = Move { moveName :: String, damage :: Power }
-            deriving (Show)
-
--- "Public" getters
-getMoveName :: Move -> String
-getMoveName = moveName
-
-getMoveDamage :: Move -> Power
-getMoveDamage = damage
-
--- Constant Null Move, used for cancelling decision to use a Move
-nullMove = Move "NULL" 0
+import Heal
+import Moves
 
 -- A Pokemon has a name, health remaining, and up to 4 moves
 data Pokemon = Pokemon1 { name :: String, health :: Int, move1 :: Move }            
