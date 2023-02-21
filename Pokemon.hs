@@ -2,8 +2,11 @@ module Pokemon
 (
     Pokemon,
     Move,
+    allPokemon,
     allPokemonNames,
-    listMoves,
+    getPokemonByName,
+    getHealth,
+    getMoves,
 ) where
 
 -- The amount of damage a particular move inflicts
@@ -13,19 +16,20 @@ type Power = Int
 data Move = Move String Power
 
 -- A Pokemon has a name, health remaining, and up to 4 moves
-data Pokemon = Pokemon4 { name :: String, health :: Int, move1 :: Move, move2 :: Move, move3 :: Move, move4 :: Move }
-             | Pokemon3 { name :: String, health :: Int, move1 :: Move, move2 :: Move, move3 :: Move }
-             | Pokemon2 { name :: String, health :: Int, move1 :: Move, move2 :: Move }
-             | Pokemon1 { name :: String, health :: Int, move1 :: Move }
+data Pokemon = Pokemon4 { name :: String, maxHealth :: Int, move1 :: Move, move2 :: Move, move3 :: Move, move4 :: Move }
+             | Pokemon3 { name :: String, maxHealth :: Int, move1 :: Move, move2 :: Move, move3 :: Move }
+             | Pokemon2 { name :: String, maxHealth :: Int, move1 :: Move, move2 :: Move }
+             | Pokemon1 { name :: String, maxHealth :: Int, move1 :: Move }
 
 -- Define Pokemon constants
 bulbasaur = Pokemon2 "Bulbasaur" 90 (Move "Tackle" 20) (Move "Vine Whip" 20)
 squirtle = Pokemon2 "Squirtle" 80 (Move "Tackle" 20) (Move "Water Gun" 20)
 charmander = Pokemon2 "Charmander" 80 (Move "Tackle" 20) (Move "Ember" 20)
+pikachu = Pokemon3 "Pikachu" 90 (Move "Tackle" 20) (Move "Thunderbolt" 30) (Move "Thundershock" 25)
 
 -- Create Pokemon "library"
 allPokemon :: [Pokemon]
-allPokemon = [bulbasaur, charmander, squirtle]
+allPokemon = [bulbasaur, charmander, squirtle, pikachu]
 
 -- Helper function: add Pokemon name to library listing
 addPokemonName :: [String] -> Pokemon -> [String]
@@ -36,9 +40,19 @@ addPokemonName lst p = lst ++ [name p]
 allPokemonNames :: [String]
 allPokemonNames = foldl addPokemonName [] allPokemon
 
--- Helper function: determine the moves available on this Pokemon
-listMoves :: Pokemon -> [String]
-listMoves (Pokemon1 _ _ (Move n1 _)) = [n1]
-listMoves (Pokemon2 _ _ (Move n1 _) (Move n2 _)) = [n1, n2]
-listMoves (Pokemon3 _ _ (Move n1 _) (Move n2 _) (Move n3 _)) = [n1, n2, n3]
-listMoves (Pokemon4 _ _ (Move n1 _) (Move n2 _) (Move n3 _) (Move n4 _)) = [n1, n2, n3, n4]
+-- Based on a name, retrieve the Pokemon entity
+getPokemonByName :: String -> [Pokemon] -> Pokemon
+getPokemonByName s lst
+    | s == name (head lst) = head lst
+    | otherwise = getPokemonByName s (tail lst)
+
+-- Simple "public" getter function
+getHealth :: Pokemon -> Int
+getHealth = maxHealth
+
+-- Getter function: determine the moves available on this Pokemon
+getMoves :: Pokemon -> [String]
+getMoves (Pokemon1 _ _ (Move n1 _)) = [n1]
+getMoves (Pokemon2 _ _ (Move n1 _) (Move n2 _)) = [n1, n2]
+getMoves (Pokemon3 _ _ (Move n1 _) (Move n2 _) (Move n3 _)) = [n1, n2, n3]
+getMoves (Pokemon4 _ _ (Move n1 _) (Move n2 _) (Move n3 _) (Move n4 _)) = [n1, n2, n3, n4]

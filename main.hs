@@ -27,21 +27,75 @@ play :: IO () -- TODO: update type
 play = 
     do
         putStrLn "--------------------------------------"
-        putStrLn "Welcome to the Pokemon Battle Arena"
+        putStrLn "Welcome to the Pokemon Battle Arena!"
         putStrLn "Choose a Pokemon to use, wrapped in quotation marks, including quotation marks:"
         putStrLn "(leave empty to exit, or \"list\" for available Pokemon)"
         choice <- getLine 
         case (readMaybe choice :: Maybe String) of
-            Nothing -> 
-                do
-                    putStrLn "Goodbye"
+            Nothing -> putStrLn "We hope to see you again!"
             -- TODO: list Pokemon names when "list"
             Just choice ->
                 if choice `elem` allPokemonNames
                     then
                         do
-                            putStrLn ("You chose " ++ choice)
+                            putStrLn "The Battle Begins!"
+                            -- TODO: randomize computer choice of Pokemon
+                            -- TODO: should we always have player start first?
+                            personBattle (getPokemonByName choice allPokemon, getPokemonByName "Squirtle" allPokemon)
                     else
                         do
-                            putStrLn "Try again"
+                            putStrLn "Not an available Pokemon name. Try again."
                             play
+
+checkBattleState :: BattleState -> IO Bool
+checkBattleState bs =
+    let maxHealth1 = getHealth (fst bs)
+        maxHealth2 = getHealth (snd bs)
+    in
+    do
+        if (maxHealth1 == 0) && (maxHealth2 == 0)
+            then
+                do
+                    putStrLn "It's a draw!"
+                    return True
+        else if maxHealth1 == 0
+            then
+                do
+                    putStrLn "You lost!"
+                    return True
+        else if maxHealth2 == 0
+            then
+                do
+                    putStrLn "You won!"
+                    return True
+        else
+            return False
+
+
+
+
+personBattle :: BattleState -> IO ()
+personBattle bs =
+    do
+        currResult <- checkBattleState bs
+        if currResult
+            then
+                putStrLn "The battle has ended."
+            else
+                -- TODO: poll actions from player
+                putStrLn "hello world"
+
+
+computerBattle :: BattleState -> IO ()
+computerBattle bs =
+    do
+        currResult <- checkBattleState bs
+        if currResult
+            then
+                putStrLn "The battle has ended."
+            else
+                -- TODO: poll actions from computer
+                putStrLn "hello world"
+
+
+                    
