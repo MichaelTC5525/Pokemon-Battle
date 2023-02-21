@@ -9,7 +9,7 @@ import Text.Read
 import Pokemon
 import Heal
 
--- State of the battle
+-- State of the battle; the first object will always be the person player's Pokemon
 type BattleState = (Pokemon, Pokemon)
 
 -- Main function to start game
@@ -18,7 +18,7 @@ play =
     do
         putStrLn "--------------------------------------"
         putStrLn "Welcome to the Pokemon Battle Arena!"
-        putStrLn "Choose a Pokemon to use, wrapped in quotation marks, including quotation marks:"
+        putStrLn "Choose a Pokemon to use, wrapped in quotation marks:"
         putStrLn "(leave empty to exit, or \"list\" for available Pokemon)"
         choice <- getLine 
         case (readMaybe choice :: Maybe String) of
@@ -89,21 +89,30 @@ personBattle bs =
                                 then
                                     do
                                         move <- pollMove (fst bs)
-                                        if getMoveName move == "NULL"
+                                        let chosenMove = getMoveName move
+                                        if chosenMove == "NULL"
                                             then 
                                                 personBattle bs
                                             else
                                                 do
-                                                    putStrLn (getName (fst bs) ++ " used " ++ getMoveName move ++ "!")
+                                                    putStrLn (getName (fst bs) ++ " used " ++ chosenMove ++ "!")
                                                     computerBattle (fst bs, useMoveOn move (snd bs))
-                            -- else if action == "Item"
-                            --     then
-                            --         pollItem
+                            else if action == "Item"
+                                then
+                                    do
+                                        heal <- pollHeal (fst bs)
+                                        let chosenHeal = getHealName heal
+                                        if chosenHeal == "NULL"
+                                            then
+                                                personBattle bs
+                                            else
+                                                do
+                                                    putStrLn ("Used a " ++ chosenHeal ++ " on " ++ getName (fst bs) ++ "!")
+                                                    computerBattle (useHealOn heal (fst bs), snd bs)
                             else
                                 personBattle bs
 
 -- Continuously ask for a move
--- TODO: if possible, allow for people to change their mind i.e. go back to Move or Item
 pollMove :: Pokemon -> IO Move
 pollMove p = 
     do
@@ -119,10 +128,28 @@ pollMove p =
                         -- TODO: actual move not just default
                         return (getMoveByName moveChoice p)
                     else
-                        pollMove p
+                        do
+                            putStrLn ("Your " ++ getName p ++ "doesn't know that move!")
+                            pollMove p
 
--- pollItem :: IO ()
--- pollItem = return
+-- Continuously ask for the item to use
+pollHeal :: Pokemon -> IO Heal
+pollHeal p = 
+    do
+        let heals = allHealNames
+        putStrLn ("Which item should be used on " ++ getName p ++ "? (leave empty to cancel)")
+        print heals
+        healChoice <- getLine
+        case (readMaybe healChoice :: Maybe String) of
+            Nothing -> return nullHeal
+            Just healChoice ->
+                if healChoice `elem` heals
+                    then
+                        return (getHealByName healChoice allHeals)
+                    else
+                        do
+                            putStrLn "That item cannot be used!"
+                            pollHeal p
 
 -- Computer's turn, less involved action from user necessary
 computerBattle :: BattleState -> IO ()
@@ -135,5 +162,5 @@ computerBattle bs =
             else
                 do
                     -- TODO: poll actions from computer
-                    putStrLn ("The opponent's " ++ getName (snd bs) ++ " used NULL")
+                    putStrLn ("The opponent's " ++ getName (fst bs) ++ " used NULL")
                     personBattle bs
