@@ -5,21 +5,39 @@ module Pokemon
     allPokemon,
     allPokemonNames,
     getPokemonByName,
+    getName,
     getHealth,
+    getMoveName,
+    getMoveDamage,
+    nullMove,
+    getMoveByName,
     getMoves,
+    useMoveOn,
 ) where
 
 -- The amount of damage a particular move inflicts
 type Power = Int
 
 -- Constructor for a Move, it has a name and an amount of damage
-data Move = Move String Power
+data Move = Move { moveName :: String, damage :: Power }
+            deriving (Show)
+
+-- "Public" getters
+getMoveName :: Move -> String
+getMoveName = moveName
+
+getMoveDamage :: Move -> Power
+getMoveDamage = damage
+
+-- Constant Null Move, used for cancelling decision to use a Move
+nullMove = Move "NULL" 0
 
 -- A Pokemon has a name, health remaining, and up to 4 moves
-data Pokemon = Pokemon4 { name :: String, maxHealth :: Int, move1 :: Move, move2 :: Move, move3 :: Move, move4 :: Move }
-             | Pokemon3 { name :: String, maxHealth :: Int, move1 :: Move, move2 :: Move, move3 :: Move }
-             | Pokemon2 { name :: String, maxHealth :: Int, move1 :: Move, move2 :: Move }
-             | Pokemon1 { name :: String, maxHealth :: Int, move1 :: Move }
+data Pokemon = Pokemon1 { name :: String, health :: Int, move1 :: Move }            
+             | Pokemon2 { name :: String, health :: Int, move1 :: Move, move2 :: Move }
+             | Pokemon3 { name :: String, health :: Int, move1 :: Move, move2 :: Move, move3 :: Move } 
+             | Pokemon4 { name :: String, health :: Int, move1 :: Move, move2 :: Move, move3 :: Move, move4 :: Move }
+             deriving (Show)
 
 -- Define Pokemon constants
 bulbasaur = Pokemon2 "Bulbasaur" 90 (Move "Tackle" 20) (Move "Vine Whip" 20)
@@ -46,9 +64,16 @@ getPokemonByName s lst
     | s == name (head lst) = head lst
     | otherwise = getPokemonByName s (tail lst)
 
--- Simple "public" getter function
+-- Simple "public" getter functions
+getName :: Pokemon -> String
+getName = name
+
 getHealth :: Pokemon -> Int
-getHealth = maxHealth
+getHealth = health
+
+getMoveByName :: String -> Pokemon -> Move
+-- TODO: which move to use
+getMoveByName s = move1
 
 -- Getter function: determine the moves available on this Pokemon
 getMoves :: Pokemon -> [String]
@@ -56,3 +81,10 @@ getMoves (Pokemon1 _ _ (Move n1 _)) = [n1]
 getMoves (Pokemon2 _ _ (Move n1 _) (Move n2 _)) = [n1, n2]
 getMoves (Pokemon3 _ _ (Move n1 _) (Move n2 _) (Move n3 _)) = [n1, n2, n3]
 getMoves (Pokemon4 _ _ (Move n1 _) (Move n2 _) (Move n3 _) (Move n4 _)) = [n1, n2, n3, n4]
+
+-- Simulate a Pokemon taking the effects of a Move
+useMoveOn :: Move -> Pokemon -> Pokemon
+useMoveOn m (Pokemon1 n h m1) = Pokemon1 n (h - getMoveDamage m) m1
+useMoveOn m (Pokemon2 n h m1 m2) = Pokemon2 n (h - getMoveDamage m) m1 m2
+useMoveOn m (Pokemon3 n h m1 m2 m3) = Pokemon3 n (h - getMoveDamage m) m1 m2 m3
+useMoveOn m (Pokemon4 n h m1 m2 m3 m4) = Pokemon4 n (h - getMoveDamage m) m1 m2 m3 m4
