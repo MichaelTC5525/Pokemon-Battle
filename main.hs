@@ -129,7 +129,6 @@ pollMove p =
                 if moveChoice `elem` moveNames
                     then
                         do
-                        -- TODO: actual move not just default
                             let moveToUse = fromMaybe 0 (findIndex (== moveChoice) moveNames) in
                                 return (moves !! moveToUse)
                     else
@@ -172,7 +171,6 @@ computerBattle bs =
                         if currHealth <= 20
                             then
                                 do
-                                    let 
                                     putStrLn ("The opponent used a Potion!")
                                     personBattle (fst bs, useHealOn (getHealByName "Potion" allHeals) (snd bs))
                             else
