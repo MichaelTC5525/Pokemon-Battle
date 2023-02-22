@@ -5,21 +5,24 @@ module Pokemon
     allPokemon,
     allPokemonNames,
     getPokemonByName,
+    getName,
     getHealth,
+    getMoveName,
+    nullMove,
+    getMoveByName,
     getMoves,
+    useMoveOn,
+    useHealOn,
 ) where
 
--- The amount of damage a particular move inflicts
-type Power = Int
-
--- Constructor for a Move, it has a name and an amount of damage
-data Move = Move String Power
+import Heal
+import Moves
 
 -- A Pokemon has a name, health remaining, and up to 4 moves
-data Pokemon = Pokemon4 { name :: String, maxHealth :: Int, move1 :: Move, move2 :: Move, move3 :: Move, move4 :: Move }
-             | Pokemon3 { name :: String, maxHealth :: Int, move1 :: Move, move2 :: Move, move3 :: Move }
-             | Pokemon2 { name :: String, maxHealth :: Int, move1 :: Move, move2 :: Move }
-             | Pokemon1 { name :: String, maxHealth :: Int, move1 :: Move }
+data Pokemon = Pokemon1 { name :: String, health :: Int, move1 :: Move }            
+             | Pokemon2 { name :: String, health :: Int, move1 :: Move, move2 :: Move }
+             | Pokemon3 { name :: String, health :: Int, move1 :: Move, move2 :: Move, move3 :: Move } 
+             | Pokemon4 { name :: String, health :: Int, move1 :: Move, move2 :: Move, move3 :: Move, move4 :: Move }
 
 -- Define Pokemon constants
 bulbasaur = Pokemon2 "Bulbasaur" 90 (Move "Tackle" 20) (Move "Vine Whip" 20)
@@ -46,9 +49,16 @@ getPokemonByName s lst
     | s == name (head lst) = head lst
     | otherwise = getPokemonByName s (tail lst)
 
--- Simple "public" getter function
+-- Simple "public" getter functions
+getName :: Pokemon -> String
+getName = name
+
 getHealth :: Pokemon -> Int
-getHealth = maxHealth
+getHealth = health
+
+getMoveByName :: String -> Pokemon -> Move
+-- TODO: which move to use
+getMoveByName s = move1
 
 -- Getter function: determine the moves available on this Pokemon
 getMoves :: Pokemon -> [String]
@@ -56,3 +66,18 @@ getMoves (Pokemon1 _ _ (Move n1 _)) = [n1]
 getMoves (Pokemon2 _ _ (Move n1 _) (Move n2 _)) = [n1, n2]
 getMoves (Pokemon3 _ _ (Move n1 _) (Move n2 _) (Move n3 _)) = [n1, n2, n3]
 getMoves (Pokemon4 _ _ (Move n1 _) (Move n2 _) (Move n3 _) (Move n4 _)) = [n1, n2, n3, n4]
+
+-- Simulate a Pokemon taking the effects of a Move
+useMoveOn :: Move -> Pokemon -> Pokemon
+useMoveOn m (Pokemon1 n h m1) = Pokemon1 n (h - getMoveDamage m) m1
+useMoveOn m (Pokemon2 n h m1 m2) = Pokemon2 n (h - getMoveDamage m) m1 m2
+useMoveOn m (Pokemon3 n h m1 m2 m3) = Pokemon3 n (h - getMoveDamage m) m1 m2 m3
+useMoveOn m (Pokemon4 n h m1 m2 m3 m4) = Pokemon4 n (h - getMoveDamage m) m1 m2 m3 m4
+
+-- Simulate a Pokemon taking the effects of a Heal
+-- TODO: limit to a max health
+useHealOn :: Heal -> Pokemon -> Pokemon
+useHealOn i (Pokemon1 n h m1) = Pokemon1 n (h + getHealAmount i) m1
+useHealOn i (Pokemon2 n h m1 m2) = Pokemon2 n (h + getHealAmount i) m1 m2
+useHealOn i (Pokemon3 n h m1 m2 m3) = Pokemon3 n (h + getHealAmount i) m1 m2 m3
+useHealOn i (Pokemon4 n h m1 m2 m3 m4) = Pokemon4 n (h + getHealAmount i) m1 m2 m3 m4
