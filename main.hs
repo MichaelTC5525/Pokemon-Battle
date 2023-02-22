@@ -9,6 +9,9 @@ import Text.Read
 import Pokemon
 import Heal
 
+import Data.Maybe
+import Data.List
+
 -- State of the battle; the first object will always be the person player's Pokemon
 type BattleState = (Pokemon, Pokemon)
 
@@ -75,7 +78,6 @@ personBattle bs =
             then
                 putStrLn "The battle has ended."
             else
-                -- TODO: poll actions from player
                 do
                     putStrLn "--------------------------------"
                     putStrLn ("Your " ++ getName (fst bs) ++ " has " ++ show (getHealth (fst bs)) ++ " health.")
@@ -117,16 +119,19 @@ pollMove :: Pokemon -> IO Move
 pollMove p = 
     do
         let moves = getMoves p
+            moveNames = getMoveNames moves
         putStrLn ("Which move should " ++ getName p ++ " use? (leave empty to cancel)")
-        print moves
+        print moveNames
         moveChoice <- getLine
         case (readMaybe moveChoice :: Maybe String) of
             Nothing -> return nullMove
             Just moveChoice ->
-                if moveChoice `elem` moves
+                if moveChoice `elem` moveNames
                     then
+                        do
                         -- TODO: actual move not just default
-                        return (getMoveByName moveChoice p)
+                            let moveToUse = fromMaybe 0 (findIndex (== moveChoice) moveNames) in
+                                return (moves !! moveToUse)
                     else
                         do
                             putStrLn ("Your " ++ getName p ++ "doesn't know that move!")
@@ -161,6 +166,18 @@ computerBattle bs =
                 putStrLn "The battle has ended."
             else
                 do
-                    -- TODO: poll actions from computer
-                    putStrLn ("The opponent's " ++ getName (fst bs) ++ " used NULL")
-                    personBattle bs
+                    let currHealth = getHealth (snd bs)
+                        moveDmgs = getMoveDamages (getMoves (snd bs))
+                        moves = getMoves (snd bs) in
+                        if currHealth <= 20
+                            then
+                                do
+                                    let 
+                                    putStrLn ("The opponent used a Potion!")
+                                    personBattle (fst bs, useHealOn (getHealByName "Potion" allHeals) (snd bs))
+                            else
+                                -- Will never use default value as maximum value of integers must exist
+                                let moveToUse = fromMaybe 0 (findIndex (== maximum moveDmgs) moveDmgs) in
+                                    do
+                                        putStrLn ("The opponent's " ++ getName (snd bs) ++ " used " ++ getMoveName (moves !! moveToUse))
+                                        personBattle (useMoveOn (moves !! moveToUse) (fst bs), snd bs)
