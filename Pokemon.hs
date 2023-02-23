@@ -81,7 +81,6 @@ useMoveOn m (Pokemon4 n h m1 m2 m3 m4) = Pokemon4 n (h - getMoveDamage m) m1 m2 
 
 -- Simulate a Pokemon taking the effects of a Heal
 -- PRECONDITIONS: a Pokemon passed to this function is known to initially have a health value > 0
--- TODO: limit to a max health
 useHealOn :: Heal -> Pokemon -> Pokemon
 useHealOn i (Pokemon1 n h m1) = Pokemon1 n (h + getHealAmount i) m1
 useHealOn i (Pokemon2 n h m1 m2) = Pokemon2 n (h + getHealAmount i) m1 m2

@@ -47,21 +47,21 @@ play =
 -- Helper function to ensure whether the state of the game is continuing or will complete
 checkBattleState :: BattleState -> IO Bool
 checkBattleState bs =
-    let maxHealth1 = getHealth (fst bs)
-        maxHealth2 = getHealth (snd bs)
+    let currHealth1 = getHealth (fst bs)
+        currHealth2 = getHealth (snd bs)
     in
     do
-        if (maxHealth1 <= 0) && (maxHealth2 <= 0)
+        if (currHealth1 <= 0) && (currHealth2 <= 0)
             then
                 do
                     putStrLn "It's a draw!"
                     return True
-        else if maxHealth1 <= 0
+        else if currHealth1 <= 0
             then
                 do
                     putStrLn "You lost!"
                     return True
-        else if maxHealth2 <= 0
+        else if currHealth2 <= 0
             then
                 do
                     putStrLn "You won!"
@@ -69,11 +69,39 @@ checkBattleState bs =
         else
             return False
 
+-- Ensure that no Pokemon exceeds their maximum health after using items
+{-
+    Note that this current implementation works under the assumption that we
+    can always reference back to the original constant object defined in Pokemon.hs
+    to simply replace any objects out of place.
+
+    Were we to allow for things like "Tail Whip" or "Growl" that affect the damage
+    output of Pokemon moves, we would need to add setters to target certain aspects
+    for changes.
+-}
+fixBattleState :: BattleState -> IO BattleState
+fixBattleState bs =
+    do
+        let currHealth1 = getHealth (fst bs)
+            currHealth2 = getHealth (snd bs)
+            refPoke1 = getPokemonByName (getName (fst bs)) allPokemon
+            refPoke2 = getPokemonByName (getName (snd bs)) allPokemon
+            in
+                if currHealth1 > getHealth refPoke1
+                    then
+                        return (refPoke1, snd bs)
+                else if currHealth2 > getHealth refPoke2
+                    then
+                        return (fst bs, refPoke2)
+                else
+                    return bs
+
 -- Player's turn to perform an action
 personBattle :: BattleState -> IO ()
 personBattle bs =
     do
         currResult <- checkBattleState bs
+        bs <- fixBattleState bs
         if currResult
             then
                 putStrLn "The battle has ended."
@@ -160,6 +188,7 @@ computerBattle :: BattleState -> IO ()
 computerBattle bs =
     do
         currResult <- checkBattleState bs
+        bs <- fixBattleState bs
         if currResult
             then
                 putStrLn "The battle has ended."
@@ -171,7 +200,7 @@ computerBattle bs =
                         if currHealth <= 20
                             then
                                 do
-                                    putStrLn ("The opponent used a Potion!")
+                                    putStrLn "The opponent used a Potion!"
                                     personBattle (fst bs, useHealOn (getHealByName "Potion" allHeals) (snd bs))
                             else
                                 -- Will never use default value as maximum value of integers must exist
