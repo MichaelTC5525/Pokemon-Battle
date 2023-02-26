@@ -4,6 +4,7 @@
 -}
 
 import System.IO
+import System.Random
 import Text.Read 
 
 import Pokemon
@@ -36,13 +37,19 @@ play =
                     then
                         do
                             putStrLn "The Battle Begins!"
-                            -- TODO: randomize computer choice of Pokemon
-                            -- TODO: should we always have player start first?
-                            personBattle (getPokemonByName choice allPokemon, getPokemonByName "Squirtle" allPokemon)
+                            rngGenerator  <- newStdGen
+                            let cpuPokemonIndex = (take 1 $ (randomRs (0, ((length allPokemon) - 1)) rngGenerator))!!0
+                            let cpuPokemonName = determinePokemonByIndex cpuPokemonIndex
+                            personBattle (getPokemonByName choice allPokemon, getPokemonByName cpuPokemonName allPokemon)
                     else
                         do
                             putStrLn "Not an available Pokemon name. Try again."
                             play
+
+-- Helper function to determine which pokemon to use
+determinePokemonByIndex :: Int -> String
+determinePokemonByIndex index =
+ getName (allPokemon!!index)
 
 -- Helper function to ensure whether the state of the game is continuing or will complete
 checkBattleState :: BattleState -> IO Bool
