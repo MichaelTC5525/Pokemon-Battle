@@ -38,6 +38,7 @@ play =
                     then
                         do
                             putStrLn "The Battle Begins!"
+                            -- randomize cpu pokemon selection
                             rngGenerator  <- newStdGen
                             let cpuPokemonIndex = (take 1 $ (randomRs (0, ((length allPokemon) - 1)) rngGenerator))!!0
                             let cpuPokemonName = determinePokemonByIndex cpuPokemonIndex
@@ -223,6 +224,7 @@ computerBattle bs =
                                                 personBattle (useMoveOn (moves !! moveToUse) (fst bs), snd bs)
                                         else
                                             do
+                                                -- if player health is lower than 80, will start selecting random moves, so we don't get stuck in same interactions
                                                 rngGenerator  <- newStdGen
                                                 let moveToUse = (take 1 $ (randomRs (0, ((length moves) - 1)) rngGenerator))!!0  
                                                 putStrLn ("The opponent's " ++ getName (snd bs) ++ " used " ++ getMoveName (moves !! moveToUse))
