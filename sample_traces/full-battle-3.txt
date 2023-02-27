@@ -1,0 +1,56 @@
+GHCi, version 9.2.5: https://www.haskell.org/ghc/  :? for help
+ghci> :l main
+[1 of 4] Compiling Heal             ( Heal.hs, interpreted )
+[2 of 4] Compiling Moves            ( Moves.hs, interpreted )
+[3 of 4] Compiling Pokemon          ( Pokemon.hs, interpreted )
+[4 of 4] Compiling Main             ( main.hs, interpreted )
+Ok, four modules loaded.
+ghci> play
+--------------------------------------
+Welcome to the Pokemon Battle Arena!
+Choose a Pokemon to use, wrapped in quotation marks:
+(leave empty to exit, or "list" for available Pokemon)
+"Bulbasaur"
+The Battle Begins! It's Bulbasaur vs. Pikachu!
+--------------------------------
+Your Bulbasaur has 90 health.
+Your opponent's Pikachu has 90 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Bulbasaur use? (leave empty to cancel)
+["Tackle","Vine Whip"]
+"Tackle"
+Bulbasaur used Tackle!
+The opponent's Pikachu used Thunderbolt!
+--------------------------------
+Your Bulbasaur has 60 health.
+Your opponent's Pikachu has 70 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Bulbasaur use? (leave empty to cancel)
+["Tackle","Vine Whip"]
+"Tackle"
+Bulbasaur used Tackle!
+The opponent's Pikachu used Tackle!
+--------------------------------
+Your Bulbasaur has 40 health.
+Your opponent's Pikachu has 50 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Bulbasaur use? (leave empty to cancel)
+["Tackle","Vine Whip"]
+"Vine Whip"
+Bulbasaur used Vine Whip!
+The opponent's Pikachu used Thundershock!
+--------------------------------
+Your Bulbasaur has 20 health.
+Your opponent's Pikachu has 25 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Bulbasaur use? (leave empty to cancel)
+["Tackle","Vine Whip"]
+"Vine Whip"
+Bulbasaur used Vine Whip!
+You won!
+The battle has ended.
+ghci>

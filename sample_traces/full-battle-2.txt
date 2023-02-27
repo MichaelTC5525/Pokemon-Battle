@@ -1,0 +1,56 @@
+GHCi, version 9.2.5: https://www.haskell.org/ghc/  :? for help
+ghci> :l main
+[1 of 4] Compiling Heal             ( Heal.hs, interpreted )
+[2 of 4] Compiling Moves            ( Moves.hs, interpreted )
+[3 of 4] Compiling Pokemon          ( Pokemon.hs, interpreted )
+[4 of 4] Compiling Main             ( main.hs, interpreted )
+Ok, four modules loaded.
+ghci> play
+--------------------------------------
+Welcome to the Pokemon Battle Arena!
+Choose a Pokemon to use, wrapped in quotation marks:
+(leave empty to exit, or "list" for available Pokemon)
+"Pikachu"
+The Battle Begins! It's Pikachu vs. Squirtle!
+--------------------------------
+Your Pikachu has 90 health.
+Your opponent's Squirtle has 80 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Pikachu use? (leave empty to cancel)
+["Tackle","Thunderbolt","Thundershock"]
+"Thunderbolt"
+Pikachu used Thunderbolt!
+The opponent's Squirtle used Water Gun!
+--------------------------------
+Your Pikachu has 65 health.
+Your opponent's Squirtle has 50 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Pikachu use? (leave empty to cancel)
+["Tackle","Thunderbolt","Thundershock"]
+"Thunderbolt"
+Pikachu used Thunderbolt!
+The opponent used a Potion.
+--------------------------------
+Your Pikachu has 65 health.
+Your opponent's Squirtle has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Pikachu use? (leave empty to cancel)
+["Tackle","Thunderbolt","Thundershock"]
+"Thunderbolt"
+Pikachu used Thunderbolt!
+The opponent used a Potion.
+--------------------------------
+Your Pikachu has 65 health.
+Your opponent's Squirtle has 30 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Pikachu use? (leave empty to cancel)
+["Tackle","Thunderbolt","Thundershock"]
+"Thunderbolt"
+Pikachu used Thunderbolt!
+You won!
+The battle has ended.
+ghci>
