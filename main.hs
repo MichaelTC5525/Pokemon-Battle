@@ -5,7 +5,8 @@
 
 import System.IO
 import System.Random
-import Text.Read 
+import Text.Read
+import Data.Char
 
 import Pokemon
 import Heal
@@ -119,22 +120,23 @@ personBattle bs =
                     putStrLn ("Your opponent's " ++ getName (snd bs) ++ " has " ++ show (getHealth (snd bs)) ++ " health.")
                     putStrLn "[\"Move\"] Use a Pokemon move / [\"Item\"] Use an item"
                     action <- getLine
-                    case (readMaybe action :: Maybe String) of
+                    let lowercasedAction = map toLower action
+                    case (readMaybe lowercasedAction :: Maybe String) of
                         Nothing -> personBattle bs
-                        Just action ->
-                            if action == "Move"
+                        Just lowercasedAction ->
+                            if lowercasedAction == "move" || lowercasedAction == "m"
                                 then
                                     do
                                         move <- pollMove (fst bs)
                                         let chosenMove = getMoveName move
                                         if chosenMove == "NULL"
-                                            then 
+                                            then
                                                 personBattle bs
                                             else
                                                 do
                                                     putStrLn (getName (fst bs) ++ " used " ++ chosenMove ++ "!")
                                                     computerBattle (fst bs, useMoveOn move (snd bs))
-                            else if action == "Item"
+                            else if lowercasedAction == "Item" || lowercasedAction == "i"
                                 then
                                     do
                                         heal <- pollHeal (fst bs)
@@ -173,7 +175,7 @@ pollMove p =
 
 -- Continuously ask for the item to use
 pollHeal :: Pokemon -> IO Heal
-pollHeal p = 
+pollHeal p =
     do
         let heals = allHealNames
         putStrLn ("Which item should be used on " ++ getName p ++ "? (leave empty to cancel)")
@@ -210,8 +212,19 @@ computerBattle bs =
                                     putStrLn "The opponent used a Potion!"
                                     personBattle (fst bs, useHealOn (getHealByName "Potion" allHeals) (snd bs))
                             else
-                                -- Will never use default value as maximum value of integers must exist
-                                let moveToUse = fromMaybe 0 (findIndex (== maximum moveDmgs) moveDmgs) in
-                                    do
-                                        putStrLn ("The opponent's " ++ getName (snd bs) ++ " used " ++ getMoveName (moves !! moveToUse))
-                                        personBattle (useMoveOn (moves !! moveToUse) (fst bs), snd bs)
+                                do
+                                    let playerHealth = getHealth (fst bs)
+                                    if playerHealth >= 80
+                                        then
+                                            do
+                                                -- Will never use default value as maximum value of integers must exist
+                                                let moveToUse = fromMaybe 0 (findIndex (== maximum moveDmgs) moveDmgs)
+                                                putStrLn ("The opponent's " ++ getName (snd bs) ++ " used " ++ getMoveName (moves !! moveToUse))
+                                                personBattle (useMoveOn (moves !! moveToUse) (fst bs), snd bs)
+                                        else
+                                            do
+                                                rngGenerator  <- newStdGen
+                                                let moveToUse = (take 1 $ (randomRs (0, ((length moves) - 1)) rngGenerator))!!0  
+                                                putStrLn ("The opponent's " ++ getName (snd bs) ++ " used " ++ getMoveName (moves !! moveToUse))
+                                                personBattle (useMoveOn (moves !! moveToUse) (fst bs), snd bs)                                  
+                                
