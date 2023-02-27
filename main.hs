@@ -3,16 +3,15 @@
     Authors: Justin Jao, Angela Li, Michael Cheung
 -}
 
-import System.IO
-import System.Random
-import Text.Read
-import Data.Char
+import System.Random ( newStdGen, randomR )
+import Text.Read ( readMaybe )
+import Data.Char ( toLower )
 
 import Pokemon
 import Heal
 
-import Data.Maybe
-import Data.List
+import Data.Maybe ( fromMaybe )
+import Data.List ( findIndex )
 
 -- State of the battle; the first object will always be the person player's Pokemon
 type BattleState = (Pokemon, Pokemon)
@@ -37,11 +36,11 @@ play =
                 else if choice `elem` allPokemonNames
                     then
                         do
-                            putStrLn "The Battle Begins!"
-                            -- randomize cpu pokemon selection
+                            -- Randomize CPU Pokemon selection
                             rngGenerator  <- newStdGen
-                            let cpuPokemonIndex = (take 1 $ (randomRs (0, ((length allPokemon) - 1)) rngGenerator))!!0
-                            let cpuPokemonName = determinePokemonByIndex cpuPokemonIndex
+                            let cpuPokemonIdx = fst (randomR (0, length allPokemon - 1) rngGenerator)
+                            let cpuPokemonName = determinePokemonByIndex cpuPokemonIdx
+                            putStrLn ("The Battle Begins! It's " ++ choice ++ " vs. " ++ cpuPokemonName ++ "!")
                             personBattle (getPokemonByName choice allPokemon, getPokemonByName cpuPokemonName allPokemon)
                     else
                         do
@@ -50,8 +49,7 @@ play =
 
 -- Helper function to determine which pokemon to use
 determinePokemonByIndex :: Int -> String
-determinePokemonByIndex index =
- getName (allPokemon!!index)
+determinePokemonByIndex index = getName (allPokemon !! index)
 
 -- Helper function to ensure whether the state of the game is continuing or will complete
 checkBattleState :: BattleState -> IO Bool
@@ -119,7 +117,7 @@ personBattle bs =
                     putStrLn "--------------------------------"
                     putStrLn ("Your " ++ getName (fst bs) ++ " has " ++ show (getHealth (fst bs)) ++ " health.")
                     putStrLn ("Your opponent's " ++ getName (snd bs) ++ " has " ++ show (getHealth (snd bs)) ++ " health.")
-                    putStrLn "[\"Move\"] Use a Pokemon move / [\"Item\"] Use an item"
+                    putStrLn "[\"Move\" / \"m\"] Use a Pokemon move / [\"Item\" / \"i\"] Use an item"
                     action <- getLine
                     let lowercasedAction = map toLower action
                     case (readMaybe lowercasedAction :: Maybe String) of
@@ -190,7 +188,7 @@ pollHeal p =
                         return (getHealByName healChoice allHeals)
                     else
                         do
-                            putStrLn "That item cannot be used!"
+                            putStrLn "That isn't an available item!"
                             pollHeal p
 
 -- Computer's turn, less involved action from user necessary
@@ -210,7 +208,7 @@ computerBattle bs =
                         if currHealth <= 20
                             then
                                 do
-                                    putStrLn "The opponent used a Potion!"
+                                    putStrLn "The opponent used a Potion."
                                     personBattle (fst bs, useHealOn (getHealByName "Potion" allHeals) (snd bs))
                             else
                                 do
@@ -220,13 +218,13 @@ computerBattle bs =
                                             do
                                                 -- Will never use default value as maximum value of integers must exist
                                                 let moveToUse = fromMaybe 0 (findIndex (== maximum moveDmgs) moveDmgs)
-                                                putStrLn ("The opponent's " ++ getName (snd bs) ++ " used " ++ getMoveName (moves !! moveToUse))
+                                                putStrLn ("The opponent's " ++ getName (snd bs) ++ " used " ++ getMoveName (moves !! moveToUse) ++ "!")
                                                 personBattle (useMoveOn (moves !! moveToUse) (fst bs), snd bs)
                                         else
                                             do
                                                 -- if player health is lower than 80, will start selecting random moves, so we don't get stuck in same interactions
                                                 rngGenerator  <- newStdGen
-                                                let moveToUse = (take 1 $ (randomRs (0, ((length moves) - 1)) rngGenerator))!!0  
-                                                putStrLn ("The opponent's " ++ getName (snd bs) ++ " used " ++ getMoveName (moves !! moveToUse))
+                                                let moveToUse = fst (randomR (0, length moves - 1) rngGenerator)
+                                                putStrLn ("The opponent's " ++ getName (snd bs) ++ " used " ++ getMoveName (moves !! moveToUse) ++ "!")
                                                 personBattle (useMoveOn (moves !! moveToUse) (fst bs), snd bs)                                  
                                 
