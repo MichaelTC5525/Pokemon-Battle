@@ -1,0 +1,137 @@
+GHCi, version 9.2.5: https://www.haskell.org/ghc/  :? for help
+ghci> :l main
+[1 of 4] Compiling Heal             ( Heal.hs, interpreted )
+[2 of 4] Compiling Moves            ( Moves.hs, interpreted )
+[3 of 4] Compiling Pokemon          ( Pokemon.hs, interpreted )
+[4 of 4] Compiling Main             ( main.hs, interpreted )
+Ok, four modules loaded.
+ghci> play
+--------------------------------------
+Welcome to the Pokemon Battle Arena!
+Choose a Pokemon to use, wrapped in quotation marks:
+(leave empty to exit, or "list" for available Pokemon)
+"Squirtle"
+The Battle Begins! It's Squirtle vs. Charmander!
+--------------------------------
+Your Squirtle has 80 health.
+Your opponent's Charmander has 80 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Squirtle use? (leave empty to cancel)
+["Tackle","Water Gun"]
+"Tackle"
+Squirtle used Tackle!
+The opponent's Charmander used Ember!
+--------------------------------
+Your Squirtle has 55 health.
+Your opponent's Charmander has 60 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"m"
+Which move should Squirtle use? (leave empty to cancel)
+["Tackle","Water Gun"]
+"Tackle"
+Squirtle used Tackle!
+The opponent's Charmander used Ember!
+--------------------------------
+Your Squirtle has 30 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Ember!
+--------------------------------
+Your Squirtle has 25 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Ember!
+--------------------------------
+Your Squirtle has 20 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Ember!
+--------------------------------
+Your Squirtle has 15 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Tackle!
+--------------------------------
+Your Squirtle has 15 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Tackle!
+--------------------------------
+Your Squirtle has 15 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Tackle!
+--------------------------------
+Your Squirtle has 15 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Ember!
+--------------------------------
+Your Squirtle has 10 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Ember!
+--------------------------------
+Your Squirtle has 5 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Tackle!
+--------------------------------
+Your Squirtle has 5 health.
+Your opponent's Charmander has 40 health.
+["Move" / "m"] Use a Pokemon move / ["Item" / "i"] Use an item
+"i"
+Which item should be used on Squirtle? (leave empty to cancel)
+["Potion","Super Potion"]
+"Potion"
+Used a Potion on Squirtle!
+The opponent's Charmander used Ember!
+You lost!
+The battle has ended.
+ghci>
