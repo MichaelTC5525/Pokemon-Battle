@@ -137,7 +137,7 @@ personBattle bs =
                                                 do
                                                     putStrLn (getName (fst bs) ++ " used " ++ chosenMove ++ "!")
                                                     computerBattle (fst bs, useMoveOn move (snd bs))
-                            else if lowercasedAction == "Item" || lowercasedAction == "i"
+                            else if lowercasedAction == "item" || lowercasedAction == "i"
                                 then
                                     do
                                         heal <- pollHeal (fst bs)
