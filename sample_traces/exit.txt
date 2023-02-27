@@ -1,0 +1,15 @@
+GHCi, version 9.2.5: https://www.haskell.org/ghc/  :? for help
+ghci> :l main
+[1 of 4] Compiling Heal             ( Heal.hs, interpreted )
+[2 of 4] Compiling Moves            ( Moves.hs, interpreted )
+[3 of 4] Compiling Pokemon          ( Pokemon.hs, interpreted )
+[4 of 4] Compiling Main             ( main.hs, interpreted )
+Ok, four modules loaded.
+ghci> play
+--------------------------------------
+Welcome to the Pokemon Battle Arena!
+Choose a Pokemon to use, wrapped in quotation marks:
+(leave empty to exit, or "list" for available Pokemon)
+
+We hope to see you again!
+ghci>
